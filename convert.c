@@ -6,13 +6,11 @@
 #define MAX_LINE_LENGTH 1024
 
 int is_comment_or_empty(const char *line) {
-    // Проверка на пустую строку или комментарий
     while (isspace(*line)) line++;
     return *line == '\0' || *line == '@' || *line == ':';
 }
 
 void trim_newline(char *line) {
-    // Удаляем символ новой строки в конце строки
     size_t len = strlen(line);
     if (len > 0 && line[len - 1] == '\n') {
         line[len - 1] = '\0';
@@ -20,7 +18,6 @@ void trim_newline(char *line) {
 }
 
 void escape_quotes(char *line) {
-    // Экранируем кавычки в строке
     char *src = line;
     char *dst = line;
     while (*src) {
@@ -33,28 +30,20 @@ void escape_quotes(char *line) {
 }
 
 void convert_command_to_c(const char *command, FILE *output_file) {
-    // Удаляем пробелы в начале и конце команды
     const char *start = command;
     while (isspace(*start)) start++;
     
     if (is_comment_or_empty(start)) return;
-    
-    // Копируем команду для обработки
+
     char command_copy[MAX_LINE_LENGTH];
     strncpy(command_copy, start, MAX_LINE_LENGTH - 1);
     command_copy[MAX_LINE_LENGTH - 1] = '\0';
-    
-    // Удаляем символ новой строки в конце команды
     trim_newline(command_copy);
-    
-    // Экранируем кавычки в команде
     escape_quotes(command_copy);
     
     if (strncmp(command_copy, "echo", 4) == 0) {
-        // Обработка команды echo
         fprintf(output_file, "    printf(\"%s\\n\");\n", command_copy + 4);
     } else {
-        // Обработка других команд (простой вызов через system)
         fprintf(output_file, "    system(\"%s\");\n", command_copy);
     }
 }
