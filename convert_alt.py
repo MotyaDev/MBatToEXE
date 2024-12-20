@@ -4,18 +4,14 @@ import multiprocessing
 import time
 
 def convert_command_to_python(command):
-    # Удаляем пробелы в начале и конце команды
     command = command.strip()
     
-    # Пропускаем пустые строки и строки с комментариями
     if not command or command.startswith('@echo off') or command.startswith('::'):
         return None
     
-    # Обработка команды echo
     if command.startswith('echo'):
         return f'print("{command[5:].strip()}")'
     
-    # Обработка других команд (простой вызов через os.system)
     return f'os.system("{command}")'
 
 def convert_batch_to_python(batch_file_path, python_file_path):
@@ -33,7 +29,6 @@ def convert_batch_to_python(batch_file_path, python_file_path):
         python_file.writelines(python_commands)
 
 if __name__ == "__main__":
-    # Получаем количество доступных ядер процессора
     cpu_count = multiprocessing.cpu_count()
     
     if len(sys.argv) != 2:
