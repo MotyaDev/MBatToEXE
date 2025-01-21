@@ -6,7 +6,7 @@ Install Python
 
 and GCC (optional)
 
-### Downloading in Releases page recommend!
+### Downloading in Releases page is not recommend!
 
 # Running
 All information in ReadMe.txt
